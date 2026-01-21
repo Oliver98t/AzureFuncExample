@@ -37,7 +37,7 @@ public class HttpTrigger2
 
     [Function("CreateUser")]
     public async Task<IActionResult> CreateUser(
-        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "users")] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "users")] HttpRequest req)
     {
         _logger.LogInformation("Creating new user");
 

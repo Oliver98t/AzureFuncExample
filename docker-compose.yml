@@ -1,0 +1,15 @@
+services:
+  azurefunc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: azurefuncexample
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/workspace
+      - /workspace/bin
+      - /workspace/obj
+    environment:
+      - AzureFunctionsJobHost__Logging__Console__IsEnabled=true
+    restart: unless-stopped
