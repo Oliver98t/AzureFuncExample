@@ -12,6 +12,9 @@ local.settings.json
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
+*.crt
+__blobstorage__
+__queuestorage__
 
 # Build results
 [Dd]ebug/

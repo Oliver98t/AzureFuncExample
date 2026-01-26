@@ -1,9 +1,10 @@
 # Development Dockerfile with hot reload support
 FROM mcr.microsoft.com/dotnet/sdk:8.0
 
-# Install Azure Functions Core Tools
+# Install Azure Functions Core Tools and network tools
 RUN apt-get update && \
-    apt-get install -y wget && \
+    apt-get install -y wget curl dnsutils ca-certificates && \
+    update-ca-certificates && \
     wget -q https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb && \
     dpkg -i packages-microsoft-prod.deb && \
     apt-get update && \
@@ -14,7 +15,17 @@ WORKDIR /workspace
 
 # Copy project file and restore dependencies
 COPY *.csproj ./
-RUN dotnet restore
+
+# Copy your custom CA certificate into the container
+COPY ZscalerRootCertificate-2048-SHA256.crt /usr/local/share/ca-certificates/
+
+# Update the CA trust store
+RUN update-ca-certificates
+
+RUN curl -v https://api.nuget.org/v3/index.json
+
+# Test connectivity and restore packages
+RUN dotnet restore --verbosity normal
 
 EXPOSE 80
 
