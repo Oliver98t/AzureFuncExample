@@ -17,7 +17,7 @@ WORKDIR /workspace
 COPY *.csproj ./
 
 # Copy your custom CA certificate into the container
-COPY ZscalerRootCertificate-2048-SHA256.crt /usr/local/share/ca-certificates/
+COPY Cert.crt /usr/local/share/ca-certificates/
 
 # Update the CA trust store
 RUN update-ca-certificates
