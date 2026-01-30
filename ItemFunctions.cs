@@ -27,9 +27,10 @@ public class ItemFunctions
 
     [Function("GetItems")]
     public async Task<IActionResult> GetItems(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "items")] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Function, "get", Route = "items")] HttpRequest req)
     {
         var tableClient = _tableServiceClient.GetTableClient(TableName);
+        await tableClient.CreateIfNotExistsAsync();
         var items = tableClient.QueryAsync<TableEntity>();
         var results = new List<object>();
         await foreach (var item in items)
@@ -49,10 +50,11 @@ public class ItemFunctions
 
     [Function("GetItemsPartition")]
     public async Task<IActionResult> GetItemsPartition(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "items/{PartitionKey}")] HttpRequest req,
+        [HttpTrigger(AuthorizationLevel.Function, "get", Route = "items/{PartitionKey}")] HttpRequest req,
         string PartitionKey)
     {
         var tableClient = _tableServiceClient.GetTableClient(TableName);
+        await tableClient.CreateIfNotExistsAsync();
         var items = tableClient.QueryAsync<TableEntity>(e => e.PartitionKey == PartitionKey);
         var results = new List<object>();
         await foreach (var item in items)
@@ -72,7 +74,7 @@ public class ItemFunctions
 
     [Function("CreateItem")]
     public async Task<IActionResult> CreateItem(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "item")] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "item")] HttpRequest req)
     {
         _logger.LogInformation("Creating new Item");
 

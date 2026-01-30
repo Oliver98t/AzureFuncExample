@@ -30,9 +30,10 @@ public class UserFunctions
 
     [Function("GetUsers")]
     public async Task<IActionResult> GetUsers(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "users")] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Function, "get", Route = "users")] HttpRequest req)
     {
         var tableClient = _tableServiceClient.GetTableClient(TableName);
+        await tableClient.CreateIfNotExistsAsync();
         var items = tableClient.QueryAsync<TableEntity>();
         var results = new List<object>();
         await foreach (var item in items)
@@ -53,10 +54,11 @@ public class UserFunctions
 
     [Function("GetUsersPartition")]
     public async Task<IActionResult> GetUsersPartition(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "users/{PartitionKey}")] HttpRequest req,
+        [HttpTrigger(AuthorizationLevel.Function, "get", Route = "users/{PartitionKey}")] HttpRequest req,
         string PartitionKey)
     {
         var tableClient = _tableServiceClient.GetTableClient(TableName);
+        await tableClient.CreateIfNotExistsAsync();
         var items = tableClient.QueryAsync<TableEntity>(e => e.PartitionKey == PartitionKey);
         var results = new List<object>();
         await foreach (var item in items)
@@ -77,7 +79,7 @@ public class UserFunctions
 
     [Function("CreateUser")]
     public async Task<IActionResult> CreateUser(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "user")] HttpRequest req)
+        [HttpTrigger(AuthorizationLevel.Function, "post", Route = "user")] HttpRequest req)
     {
         _logger.LogInformation("Creating new User");
 
