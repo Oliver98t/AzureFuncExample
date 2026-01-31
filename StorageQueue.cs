@@ -25,13 +25,13 @@ public class StorageQueue
     }
 
     [Function("HttpCreateQueueMessage")]
-    public static async Task<MultiResponse> HttpCreateQueueMessage([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req,
+    public static async Task<MultiResponse> HttpCreateQueueMessage([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "QueueTrigger")] HttpRequestData req,
         FunctionContext executionContext)
     {
         var logger = executionContext.GetLogger("HttpExample");
         logger.LogInformation("C# HTTP trigger function processed a request.");
 
-        var message = "Queue message created!";
+        var message = "Queue message created!!!!!!!";
 
         var response = req.CreateResponse(HttpStatusCode.OK);
         response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
